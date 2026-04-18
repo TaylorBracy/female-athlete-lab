@@ -16,7 +16,8 @@ type Article = {
   pillars: Pillar[]
   /** Short teaser; shown on cards when set. */
   excerpt?: string
-  pdfUrl?: string
+  /** Journal card badge only. No public file download is offered on the site. */
+  cardKind?: 'paper' | 'note'
   googleDocUrl?: string
 }
 
@@ -27,7 +28,7 @@ const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
     pillars: ['Rehab', "Women's Sports", 'Performance'],
     excerpt:
       'Soccer versus basketball: how lateral ankle sprains differ in load, surface, and footwear—and what that means for rehab.',
-    pdfUrl: '/papers/ankle-sprains-female-athletes-soccer-vs-basketball.pdf',
+    cardKind: 'paper',
   },
   {
     title: 'What Female Athletes Actually Need Physically',
@@ -277,7 +278,7 @@ export default function FemaleAthleteLabWebsite() {
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {visibleArticles.map((post, index) => {
-                const isPaper = Boolean(post.pdfUrl)
+                const isPaper = post.cardKind === 'paper'
                 return (
                   <article
                     key={post.id}
@@ -328,16 +329,6 @@ export default function FemaleAthleteLabWebsite() {
                       </p>
                     ) : null}
                     <div className="relative mt-5 flex flex-col gap-2">
-                      {post.pdfUrl ? (
-                        <a
-                          href={post.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`font-mono-ui inline-flex w-full items-center justify-center rounded-xl border border-pink-200/90 bg-gradient-to-b from-white to-pink-50/90 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-pink-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition-all duration-500 hover:border-pink-300 hover:shadow-[0_8px_24px_-6px_rgba(244,114,182,0.35)] ${easeFluid}`}
-                        >
-                          Open PDF
-                        </a>
-                      ) : null}
                       {post.googleDocUrl ? (
                         <a
                           href={post.googleDocUrl}

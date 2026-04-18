@@ -7,3 +7,7 @@ site/dist
 site/dist-ssr
 site/*.local
 site/.env.local
+
+# Personal exports — never deploy (see private/README.md)
+private/*
+!private/README.md

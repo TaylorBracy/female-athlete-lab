@@ -265,9 +265,11 @@ def build_flowables():
 
 
 def main() -> None:
+    # Writes to repo-root private/ — not deployed, not in git (see private/README.md).
+    repo_root = Path(__file__).resolve().parent.parent.parent
     out = (
-        Path(__file__).resolve().parent.parent
-        / "public"
+        repo_root
+        / "private"
         / "papers"
         / "ankle-sprains-female-athletes-soccer-vs-basketball.pdf"
     )
