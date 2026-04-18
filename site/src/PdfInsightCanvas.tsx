@@ -1,7 +1,10 @@
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import { useEffect, useRef, useState } from 'react'
 
-import { getInsightPdfBuffer } from './insightPdfCache'
+import {
+  getInsightPdfBuffer,
+  insightPdfUrlForPdfJs,
+} from './insightPdfCache'
 
 /** Device-pixel height per canvas tile (stay under common GPU / canvas limits). */
 const TILE_DEVICE_PX = 4096
@@ -9,6 +12,9 @@ const TILE_DEVICE_PX = 4096
 type Props = {
   pdfUrl: string
 }
+
+/** Must match PdfInsightPage reader surface (neutral off-white). */
+const readerBg = '#faf9f6'
 
 export default function PdfInsightCanvas({ pdfUrl }: Props) {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -57,7 +63,7 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
                 disableStream: true,
               }
             : {
-                url: pdfUrl,
+                url: insightPdfUrlForPdfJs(pdfUrl),
                 disableRange: false,
                 disableStream: false,
               },
@@ -76,19 +82,21 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
         const scale = cssScale * dpr
         const viewport = page.getViewport({ scale })
 
+        const totalDeviceH = Math.ceil(viewport.height)
         let offset = 0
         let firstTile = true
-        while (offset < viewport.height) {
-          const sliceH = Math.min(TILE_DEVICE_PX, viewport.height - offset)
+        while (offset < totalDeviceH) {
+          const deviceH = Math.min(TILE_DEVICE_PX, totalDeviceH - offset)
           const canvas = document.createElement('canvas')
           const ctx = canvas.getContext('2d', { alpha: false })
           if (!ctx) throw new Error('Canvas 2D not available')
 
           canvas.width = Math.floor(viewport.width)
-          canvas.height = Math.floor(sliceH)
+          canvas.height = deviceH
           canvas.style.width = `${cssW}px`
-          canvas.style.height = `${sliceH / dpr}px`
+          canvas.style.height = `${deviceH / dpr}px`
           canvas.style.display = 'block'
+          canvas.style.verticalAlign = 'top'
 
           const rt = page.render({
             canvasContext: ctx,
@@ -106,7 +114,7 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
             firstTile = false
             if (!cancelled) setPhase('ready')
           }
-          offset += sliceH
+          offset += deviceH
         }
 
         page.cleanup()
@@ -137,7 +145,8 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
   return (
     <div
       ref={hostRef}
-      className="pdf-insight-canvas-host flex w-full min-w-0 flex-col bg-[#f5f3ef] [&>canvas]:max-w-none"
+      className="pdf-insight-canvas-host flex w-full min-w-0 flex-col gap-0 leading-none [&>canvas]:block [&>canvas]:max-w-none [&>canvas+canvas]:-mt-[2px]"
+      style={{ backgroundColor: readerBg }}
       data-phase={phase}
       aria-busy={phase === 'loading'}
     />

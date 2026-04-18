@@ -4,6 +4,9 @@
  */
 export const FEATURED_INSIGHT_PDF = 'ankle-sprains-female-athletes-soccer-vs-basketball.pdf'
 
+/** Bump when replacing the PDF so browsers and the in-memory cache pick up the new file. */
+export const FEATURED_INSIGHT_PDF_REVISION = '5'
+
 export const FEATURED_INSIGHT = {
   viewerPath: '/insights/ankle-sprains',
   pdfUrl: `/papers/${FEATURED_INSIGHT_PDF}`,
