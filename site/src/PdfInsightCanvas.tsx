@@ -137,7 +137,7 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
   return (
     <div
       ref={hostRef}
-      className="pdf-insight-canvas-host flex w-full min-w-0 flex-col bg-[#141210] [&>canvas]:max-w-none"
+      className="pdf-insight-canvas-host flex w-full min-w-0 flex-col bg-[#f5f3ef] [&>canvas]:max-w-none"
       data-phase={phase}
       aria-busy={phase === 'loading'}
     />

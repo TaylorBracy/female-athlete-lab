@@ -7,7 +7,7 @@ const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 
 export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-[#141210] text-stone-200">
+    <div className="flex min-h-dvh flex-col bg-[#f5f3ef] text-stone-800">
       <div className="fixed left-0 right-0 top-0 z-50 flex items-start px-[max(0.75rem,env(safe-area-inset-left))] pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))]">
         <a
           href="/"
@@ -16,7 +16,7 @@ export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
             clearAnkleInsightRead()
             navigate('/')
           }}
-          className={`font-mono-ui pointer-events-auto rounded-lg border border-[#e8e6e1]/12 bg-[#181416]/92 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#e8e6e1] shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55)] backdrop-blur-md transition-colors hover:text-[#f5f3ef] ${easeFluid}`}
+          className={`font-mono-ui pointer-events-auto rounded-lg border border-stone-400/35 bg-[#ebe8e2]/95 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-800 shadow-[0_8px_28px_-8px_rgba(0,0,0,0.12)] backdrop-blur-md transition-colors hover:bg-[#e2dfd8] ${easeFluid}`}
         >
           ← Lab
         </a>
