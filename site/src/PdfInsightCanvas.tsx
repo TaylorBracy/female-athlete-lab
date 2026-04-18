@@ -63,8 +63,8 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
         const scale = cssScale * dpr
         const viewport = page.getViewport({ scale })
 
-        const frag = document.createDocumentFragment()
         let offset = 0
+        let firstTile = true
         while (offset < viewport.height) {
           const sliceH = Math.min(TILE_DEVICE_PX, viewport.height - offset)
           const canvas = document.createElement('canvas')
@@ -88,13 +88,16 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
           await rt.promise
           if (cancelled) return
 
-          frag.appendChild(canvas)
+          host.appendChild(canvas)
+          if (firstTile) {
+            firstTile = false
+            if (!cancelled) setPhase('ready')
+          }
           offset += sliceH
         }
 
         page.cleanup()
-        host.appendChild(frag)
-        if (!cancelled) setPhase('ready')
+        if (!cancelled && firstTile) setPhase('ready')
       } catch (e) {
         console.error(e)
         if (!cancelled) setPhase('error')

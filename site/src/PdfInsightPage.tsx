@@ -1,14 +1,19 @@
+import type { NavigateFn } from './navigation'
 import { FEATURED_INSIGHT } from './featuredInsight'
 import PdfInsightCanvas from './PdfInsightCanvas'
 
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 
-export default function PdfInsightPage() {
+export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
   return (
     <div className="flex min-h-dvh flex-col bg-[#141210] text-stone-200">
       <div className="fixed left-0 right-0 top-0 z-50 flex items-start justify-between gap-3 px-[max(0.75rem,env(safe-area-inset-left))] pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))]">
         <a
           href="/"
+          onClick={(e) => {
+            e.preventDefault()
+            navigate('/')
+          }}
           className={`font-mono-ui pointer-events-auto rounded-lg border border-white/10 bg-[#181416]/92 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-300/95 shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55)] backdrop-blur-md transition-colors hover:text-pink-100 ${easeFluid}`}
         >
           ← Lab
