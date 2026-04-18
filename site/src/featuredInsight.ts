@@ -1,7 +1,6 @@
 /**
- * Featured insight — preview copy only. Full content lives in the PDF at pdfUrl.
- * Add the file to site/public/papers/ (see pdfFilename).
- * Optional thumbnail: site/public/insights/ankle-sprains-thumb.jpg
+ * Featured insight — preview on home; full piece loads from pdfUrl in-app only.
+ * Asset: site/public/papers/ (pdfFilename). Optional thumb: site/public/insights/
  */
 export const FEATURED_INSIGHT_PDF = 'ankle-sprains-female-athletes-soccer-vs-basketball.pdf'
 
