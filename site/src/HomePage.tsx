@@ -112,6 +112,11 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
         aria-hidden
       />
 
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-pink-400/50 to-transparent blur-[1px]"
+        aria-hidden
+      />
+
       <div className={`relative z-10 mx-auto max-w-7xl px-5 sm:px-6 ${easeFluid}`}>
         <header className="flex flex-col gap-5 py-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
@@ -137,16 +142,21 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
           </div>
         </header>
 
+        <div
+          className="h-px w-full bg-gradient-to-r from-transparent via-pink-500/25 to-transparent"
+          aria-hidden
+        />
+
         {/* Insights — preview only; full PDF loads only on /insights/... */}
         <section className="py-8 lg:py-10" aria-labelledby="insights-heading">
           <h2
             id="insights-heading"
-            className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-[#e8e6e1]"
+            className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-pink-400/90"
           >
             Insights
           </h2>
           <div
-            className={`mt-4 overflow-hidden rounded-[1.75rem] border-0 bg-white/[0.06] shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl ${easeFluid}`}
+            className={`mt-4 overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/[0.06] shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl ${easeFluid}`}
           >
             <div className="grid gap-0 md:grid-cols-[minmax(0,220px)_1fr] lg:grid-cols-[minmax(0,260px)_1fr]">
               <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[200px]">
@@ -163,17 +173,17 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
                     className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-rose-950/90 via-[#1a1412] to-stone-950"
                     aria-hidden
                   >
-                    <span className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.35em] text-[#c9c6c0]">
+                    <span className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.35em] text-pink-300/50">
                       Lab
                     </span>
                   </div>
                 )}
               </div>
               <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
-                <span className="font-mono-ui w-fit rounded-full border border-[#e8e6e1]/20 bg-[#e8e6e1]/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#e8e6e1]">
+                <span className="font-mono-ui w-fit rounded-full border border-pink-400/25 bg-pink-500/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-pink-200/90">
                   {FEATURED_INSIGHT.category}
                 </span>
-                <h3 className="text-balance text-xl font-semibold leading-snug tracking-tight text-[#f5f3ef] sm:text-2xl">
+                <h3 className="text-balance text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
                   {FEATURED_INSIGHT.title}
                 </h3>
                 <p className="max-w-xl text-pretty text-sm leading-relaxed text-stone-400 sm:text-[0.9375rem]">
@@ -189,7 +199,7 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
                       authorizeAnkleInsightRead()
                       navigate(FEATURED_INSIGHT.viewerPath)
                     }}
-                    className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-[#e8e6e1] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-stone-900 shadow-[0_12px_36px_-12px_rgba(0,0,0,0.45)] transition-all duration-500 hover:bg-[#f5f3ef] hover:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.35)] ${easeFluid}`}
+                    className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 via-pink-500 to-fuchsia-600 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_12px_36px_-8px_rgba(219,39,119,0.45)] transition-all duration-500 hover:shadow-[0_16px_44px_-6px_rgba(192,38,211,0.35)] ${easeFluid}`}
                   >
                     Read Now
                   </a>
@@ -201,7 +211,7 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
 
         <section className={`mx-auto max-w-xl pb-16 ${easeFluid}`}>
           <aside className={`flex flex-col gap-7 ${easeFluid}`}>
-            <div className="rounded-[2rem] border border-white/65 bg-white/[0.96] p-7 shadow-[0_28px_70px_-28px_rgba(217,70,239,0.22)] backdrop-blur-2xl transition-all duration-700 hover:border-white/85 hover:shadow-[0_36px_80px_-24px_rgba(217,70,239,0.28)]">
+            <div className="rounded-[2rem] border border-pink-200/45 bg-gradient-to-br from-white/[0.94] via-pink-50/35 to-fuchsia-100/25 p-7 shadow-[0_28px_70px_-28px_rgba(217,70,239,0.28)] backdrop-blur-2xl transition-all duration-700 hover:border-pink-200/70 hover:shadow-[0_36px_80px_-24px_rgba(217,70,239,0.34)]">
               <h3 className="font-mono-ui text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-900">
                 Pillars
               </h3>
@@ -249,7 +259,7 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
             <div
               role="region"
               aria-label="Article index"
-              className="rounded-[2rem] border border-white/60 bg-white/[0.96] p-6 font-mono-ui text-[10px] uppercase tracking-widest text-stone-500 shadow-[0_20px_55px_-22px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-500 hover:border-white/80"
+              className="rounded-[2rem] border border-pink-200/40 bg-gradient-to-br from-white/[0.93] via-fuchsia-50/25 to-pink-50/30 p-6 font-mono-ui text-[10px] uppercase tracking-widest text-stone-500 shadow-[0_20px_55px_-22px_rgba(217,70,239,0.18)] backdrop-blur-xl transition-all duration-500 hover:border-pink-200/65"
             >
               <div className="flex justify-between text-pink-700">
                 <span>Articles</span>
