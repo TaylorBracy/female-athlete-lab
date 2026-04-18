@@ -8,6 +8,37 @@ const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 /** One published PDF insight in the archive. */
 const PUBLISHED_INSIGHT_COUNT = 1
 
+function PillarPill({
+  pillar,
+  tone,
+  selected,
+  onToggle,
+}: {
+  pillar: Pillar
+  tone: 'pink' | 'violet'
+  selected: boolean
+  onToggle: () => void
+}) {
+  const inactiveClasses =
+    tone === 'pink'
+      ? `border-pink-300/60 bg-white/95 text-pink-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] hover:border-pink-400/90 hover:shadow-[0_0_32px_rgba(244,114,182,0.22)] hover:-translate-y-0.5 ${easeFluid}`
+      : `border-fuchsia-300/60 bg-white/95 text-fuchsia-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] hover:border-fuchsia-400/90 hover:shadow-[0_0_32px_rgba(217,70,239,0.2)] hover:-translate-y-0.5 ${easeFluid}`
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className={`font-mono-ui rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-500 ${easeFluid} ${
+        selected
+          ? 'border-pink-500 bg-pink-600 text-white shadow-[0_0_32px_rgba(219,39,119,0.4)] scale-[1.02]'
+          : inactiveClasses
+      }`}
+    >
+      {pillar}
+    </button>
+  )
+}
+
 export default function HomePage() {
   const [selectedFilterPillars, setSelectedFilterPillars] = useState<Set<Pillar>>(
     () => new Set(),
@@ -24,35 +55,6 @@ export default function HomePage() {
       else next.add(pillar)
       return next
     })
-  }
-
-  const Pill = ({
-    pillar,
-    tone,
-  }: {
-    pillar: Pillar
-    tone: 'pink' | 'violet'
-  }) => {
-    const selected = selectedFilterPillars.has(pillar)
-
-    const inactiveClasses =
-      tone === 'pink'
-        ? `border-pink-300/60 bg-white/95 text-pink-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] hover:border-pink-400/90 hover:shadow-[0_0_32px_rgba(244,114,182,0.22)] hover:-translate-y-0.5 ${easeFluid}`
-        : `border-fuchsia-300/60 bg-white/95 text-fuchsia-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] hover:border-fuchsia-400/90 hover:shadow-[0_0_32px_rgba(217,70,239,0.2)] hover:-translate-y-0.5 ${easeFluid}`
-
-    return (
-      <button
-        type="button"
-        onClick={() => toggleFilterPillar(pillar)}
-        className={`font-mono-ui rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-500 ${easeFluid} ${
-          selected
-            ? 'border-pink-500 bg-pink-600 text-white shadow-[0_0_32px_rgba(219,39,119,0.4)] scale-[1.02]'
-            : inactiveClasses
-        }`}
-      >
-        {pillar}
-      </button>
-    )
   }
 
   return (
@@ -199,10 +201,30 @@ export default function HomePage() {
                 <strong>any</strong> match. Tap again to deselect.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">
-                <Pill pillar="Performance" tone="pink" />
-                <Pill pillar="Rehab" tone="violet" />
-                <Pill pillar="Data" tone="pink" />
-                <Pill pillar="Women's Sports" tone="violet" />
+                <PillarPill
+                  pillar="Performance"
+                  tone="pink"
+                  selected={selectedFilterPillars.has('Performance')}
+                  onToggle={() => toggleFilterPillar('Performance')}
+                />
+                <PillarPill
+                  pillar="Rehab"
+                  tone="violet"
+                  selected={selectedFilterPillars.has('Rehab')}
+                  onToggle={() => toggleFilterPillar('Rehab')}
+                />
+                <PillarPill
+                  pillar="Data"
+                  tone="pink"
+                  selected={selectedFilterPillars.has('Data')}
+                  onToggle={() => toggleFilterPillar('Data')}
+                />
+                <PillarPill
+                  pillar="Women's Sports"
+                  tone="violet"
+                  selected={selectedFilterPillars.has("Women's Sports")}
+                  onToggle={() => toggleFilterPillar("Women's Sports")}
+                />
               </div>
               {selectedFilterPillars.size > 0 ? (
                 <button

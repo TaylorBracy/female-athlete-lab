@@ -1,50 +1,45 @@
 import { FEATURED_INSIGHT } from './featuredInsight'
+import PdfInsightCanvas from './PdfInsightCanvas'
 
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 
 export default function PdfInsightPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#181416] text-stone-200">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#181416]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3.5 sm:px-6">
-          <a
-            href="/"
-            className={`font-mono-ui shrink-0 text-[10px] font-semibold uppercase tracking-[0.22em] text-pink-300/95 transition-colors hover:text-pink-100 ${easeFluid}`}
-          >
-            ← The Female Athlete Lab
-          </a>
-          <p className="min-w-0 flex-1 text-center font-mono-ui text-[9px] uppercase tracking-widest text-stone-500 sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:text-center">
-            Insight
-          </p>
-          <a
-            href={FEATURED_INSIGHT.pdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`font-mono-ui shrink-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-300/95 transition-colors hover:text-pink-100 ${easeFluid}`}
-          >
-            Open PDF
-          </a>
-        </div>
-      </header>
-
-      <iframe
-        title={FEATURED_INSIGHT.title}
-        src={FEATURED_INSIGHT.pdfUrl}
-        className="min-h-[calc(100vh-3.5rem)] w-full flex-1 border-0 bg-stone-900"
-      />
-
-      <p className="border-t border-white/10 px-5 py-3 text-center font-mono-ui text-[9px] text-stone-500">
-        PDF not loading?{' '}
+    <div className="flex min-h-dvh flex-col bg-[#141210] text-stone-200">
+      <div className="fixed left-0 right-0 top-0 z-50 flex items-start justify-between gap-3 px-[max(0.75rem,env(safe-area-inset-left))] pb-2 pt-[max(0.5rem,env(safe-area-inset-top))] pr-[max(0.75rem,env(safe-area-inset-right))]">
+        <a
+          href="/"
+          className={`font-mono-ui pointer-events-auto rounded-lg bg-[#141210]/90 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-300/95 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.65)] backdrop-blur-md transition-colors hover:text-pink-100 ${easeFluid}`}
+        >
+          ← Lab
+        </a>
         <a
           href={FEATURED_INSIGHT.pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-pink-400 underline decoration-pink-500/40 underline-offset-2 hover:text-pink-300"
+          className={`font-mono-ui pointer-events-auto rounded-lg bg-[#141210]/90 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-300/95 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.65)] backdrop-blur-md transition-colors hover:text-pink-100 ${easeFluid}`}
         >
-          Open in a new tab
+          Open PDF
         </a>
-        .
-      </p>
+      </div>
+
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch]">
+        <div className="flex w-full min-w-0 flex-1 flex-col pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[calc(2.75rem+env(safe-area-inset-top))]">
+          <PdfInsightCanvas pdfUrl={FEATURED_INSIGHT.pdfUrl} />
+          <p className="font-mono-ui mt-4 px-[max(0.75rem,env(safe-area-inset-left))] text-center text-[9px] text-stone-500 pr-[max(0.75rem,env(safe-area-inset-right))]">
+            Trouble viewing?{' '}
+            <a
+              href={FEATURED_INSIGHT.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-400 underline decoration-pink-500/40 underline-offset-2 hover:text-pink-300"
+            >
+              Open the PDF
+            </a>
+            .
+          </p>
+        </div>
+      </main>
     </div>
   )
 }
