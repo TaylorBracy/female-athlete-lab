@@ -34,5 +34,5 @@ The site is a static Vite build. Vercel’s **Hobby** tier is free for personal 
 
 ### Content
 
-- Article titles and metadata live in **`site/src/App.tsx`** (`INITIAL_ARTICLES` and related UI). Adjust there and rebuild for production.
-- **Pillars** in the sidebar are a multi-select filter for **Latest articles**: any selected pillar matches an article if that article is tagged with **any** of them (OR). Use **Clear pillar filters** to show everything again.
+- The live page is **`site/src/HomePage.tsx`**: header plus **Pillars** and an empty **Articles** counter. There is no article body, no journal grid, and no ankle-sprains route in the app.
+- After you change code, **commit and `git push`** so Vercel rebuilds. If production still looks old, open **Deployments → Redeploy** and hard-refresh the browser (**Cmd+Shift+R**).
