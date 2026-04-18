@@ -3,6 +3,7 @@ import { useLayoutEffect } from 'react'
 import { clearAnkleInsightRead } from './ankleInsightGate'
 import type { NavigateFn } from './navigation'
 import { FEATURED_INSIGHT } from './featuredInsight'
+import { invalidateFeaturedInsightPdfCache } from './insightPdfCache'
 import PdfInsightCanvas from './PdfInsightCanvas'
 
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
@@ -11,6 +12,10 @@ const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 const readerBg = '#faf9f6'
 
 export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
+  useLayoutEffect(() => {
+    if (import.meta.env.DEV) invalidateFeaturedInsightPdfCache()
+  }, [])
+
   useLayoutEffect(() => {
     const prevHtml = document.documentElement.style.backgroundColor
     const prevBody = document.body.style.backgroundColor

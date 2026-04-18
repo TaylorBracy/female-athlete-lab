@@ -7,12 +7,25 @@ let buffer: ArrayBuffer | undefined
 let bufferRevision: string | undefined
 let inflight: Promise<ArrayBuffer | undefined> | undefined
 
+/** Drop bytes so the next open refetches (e.g. after replacing the PDF on disk). */
+export function invalidateFeaturedInsightPdfCache() {
+  buffer = undefined
+  bufferRevision = undefined
+  inflight = undefined
+}
+
 function isFeaturedPdf(url: string) {
   return url === FEATURED_INSIGHT.pdfUrl
 }
 
 function featuredPdfNetworkUrl() {
   return `${FEATURED_INSIGHT.pdfUrl}?v=${FEATURED_INSIGHT_PDF_REVISION}`
+}
+
+function pdfFetchInit(): RequestInit {
+  // In dev, disk + HTTP caches often keep an old PDF; `reload` bypasses them.
+  if (import.meta.env.DEV) return { cache: 'reload' }
+  return { cache: 'no-cache' }
 }
 
 /** Same file URL pdf.js should load when the in-memory buffer is unavailable. */
@@ -34,7 +47,7 @@ export function primeInsightPdf(url: string) {
   syncBufferRevision()
   if (buffer?.byteLength) return
   if (inflight) return
-  inflight = fetch(featuredPdfNetworkUrl(), { cache: 'no-cache' })
+  inflight = fetch(featuredPdfNetworkUrl(), pdfFetchInit())
     .then((r) => r.arrayBuffer())
     .then((b) => {
       if (b.byteLength > 0) buffer = b
@@ -54,7 +67,7 @@ export async function getInsightPdfBuffer(
   syncBufferRevision()
   if (buffer?.byteLength) return buffer
   if (inflight) return inflight
-  inflight = fetch(featuredPdfNetworkUrl(), { cache: 'no-cache' })
+  inflight = fetch(featuredPdfNetworkUrl(), pdfFetchInit())
     .then((r) => r.arrayBuffer())
     .then((b) => {
       if (b.byteLength > 0) buffer = b
