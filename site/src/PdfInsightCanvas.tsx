@@ -1,6 +1,8 @@
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import { useEffect, useRef, useState } from 'react'
 
+import { getInsightPdfBuffer } from './insightPdfCache'
+
 /** Device-pixel height per canvas tile (stay under common GPU / canvas limits). */
 const TILE_DEVICE_PX = 4096
 
@@ -40,15 +42,26 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
       host.replaceChildren()
 
       try {
-        const { AnnotationMode, getDocument, GlobalWorkerOptions } =
-          await import('pdfjs-dist')
+        const [{ AnnotationMode, getDocument, GlobalWorkerOptions }, bytes] =
+          await Promise.all([
+            import('pdfjs-dist'),
+            getInsightPdfBuffer(pdfUrl),
+          ])
         GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-        const task = getDocument({
-          url: pdfUrl,
-          disableRange: false,
-          disableStream: false,
-        })
+        const task = getDocument(
+          bytes?.byteLength
+            ? {
+                data: new Uint8Array(bytes),
+                disableRange: true,
+                disableStream: true,
+              }
+            : {
+                url: pdfUrl,
+                disableRange: false,
+                disableStream: false,
+              },
+        )
         const pdf = await task.promise
         pdfDoc = pdf
         if (cancelled) return

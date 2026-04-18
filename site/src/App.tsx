@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import {
+  isAnkleInsightReadAuthorized,
+} from './ankleInsightGate'
 import { FEATURED_INSIGHT } from './featuredInsight'
 import HomePage from './HomePage'
 import type { NavigateFn } from './navigation'
@@ -11,20 +14,39 @@ function normalizePath(pathname: string) {
   return p
 }
 
+function syncPathFromLocation(): string {
+  let p = normalizePath(window.location.pathname)
+  if (
+    p === FEATURED_INSIGHT.viewerPath &&
+    !isAnkleInsightReadAuthorized()
+  ) {
+    window.history.replaceState({}, '', '/')
+    p = '/'
+  }
+  return p
+}
+
 export default function App() {
   const [path, setPath] = useState(() =>
-    typeof window === 'undefined' ? '/' : normalizePath(window.location.pathname),
+    typeof window === 'undefined' ? '/' : syncPathFromLocation(),
   )
 
   useEffect(() => {
-    const onPop = () =>
-      setPath(normalizePath(window.location.pathname))
+    const onPop = () => {
+      setPath(syncPathFromLocation())
+    }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
 
   const navigate = useCallback<NavigateFn>((to) => {
     const next = normalizePath(to)
+    if (
+      next === FEATURED_INSIGHT.viewerPath &&
+      !isAnkleInsightReadAuthorized()
+    ) {
+      return
+    }
     if (normalizePath(window.location.pathname) !== next) {
       window.history.pushState({}, '', to)
     }

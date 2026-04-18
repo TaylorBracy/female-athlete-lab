@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 
-import type { NavigateFn } from './navigation'
+import { authorizeAnkleInsightRead } from './ankleInsightGate'
 import { FEATURED_INSIGHT } from './featuredInsight'
+import { primeInsightPdf } from './insightPdfCache'
+import type { NavigateFn } from './navigation'
 import { type Pillar } from './articlesData'
 
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
@@ -9,9 +11,9 @@ const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 /** One published PDF insight in the archive. */
 const PUBLISHED_INSIGHT_COUNT = 1
 
-function warmInsightAssets() {
+function warmInsightRoute() {
   void import('pdfjs-dist')
-  void fetch(FEATURED_INSIGHT.pdfUrl, { cache: 'force-cache' }).catch(() => {})
+  primeInsightPdf(FEATURED_INSIGHT.pdfUrl)
 }
 
 function PillarPill({
@@ -51,23 +53,8 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
   )
   const [thumbFailed, setThumbFailed] = useState(false)
 
-  useEffect(() => {
-    let cancelled = false
-    const run = () => {
-      if (!cancelled) warmInsightAssets()
-    }
-    if (typeof window.requestIdleCallback === 'function') {
-      const id = window.requestIdleCallback(run, { timeout: 2800 })
-      return () => {
-        cancelled = true
-        window.cancelIdleCallback(id)
-      }
-    }
-    const t = window.setTimeout(run, 1800)
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-    }
+  useLayoutEffect(() => {
+    warmInsightRoute()
   }, [])
 
   const articleCount = PUBLISHED_INSIGHT_COUNT
@@ -205,10 +192,11 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
                 <div>
                   <a
                     href={FEATURED_INSIGHT.viewerPath}
-                    onMouseEnter={warmInsightAssets}
-                    onFocus={warmInsightAssets}
+                    onMouseEnter={warmInsightRoute}
+                    onFocus={warmInsightRoute}
                     onClick={(e) => {
                       e.preventDefault()
+                      authorizeAnkleInsightRead()
                       navigate(FEATURED_INSIGHT.viewerPath)
                     }}
                     className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 via-pink-500 to-fuchsia-600 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_12px_36px_-8px_rgba(219,39,119,0.45)] transition-all duration-500 hover:shadow-[0_16px_44px_-6px_rgba(192,38,211,0.35)] ${easeFluid}`}

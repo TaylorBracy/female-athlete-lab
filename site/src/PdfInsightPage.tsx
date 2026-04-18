@@ -1,3 +1,4 @@
+import { clearAnkleInsightRead } from './ankleInsightGate'
 import type { NavigateFn } from './navigation'
 import { FEATURED_INSIGHT } from './featuredInsight'
 import PdfInsightCanvas from './PdfInsightCanvas'
@@ -12,6 +13,7 @@ export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
           href="/"
           onClick={(e) => {
             e.preventDefault()
+            clearAnkleInsightRead()
             navigate('/')
           }}
           className={`font-mono-ui pointer-events-auto rounded-lg border border-white/10 bg-[#181416]/92 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-pink-300/95 shadow-[0_8px_28px_-8px_rgba(0,0,0,0.55)] backdrop-blur-md transition-colors hover:text-pink-100 ${easeFluid}`}
