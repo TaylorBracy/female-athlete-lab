@@ -141,12 +141,12 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
         <section className="py-8 lg:py-10" aria-labelledby="insights-heading">
           <h2
             id="insights-heading"
-            className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-[#ebe8e2]"
+            className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-[#e8e6e1]"
           >
             Insights
           </h2>
           <div
-            className={`mt-4 overflow-hidden rounded-[1.75rem] border border-stone-900/10 bg-[#ebe8e2] shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] ${easeFluid}`}
+            className={`mt-4 overflow-hidden rounded-[1.75rem] border-0 bg-white/[0.06] shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl ${easeFluid}`}
           >
             <div className="grid gap-0 md:grid-cols-[minmax(0,220px)_1fr] lg:grid-cols-[minmax(0,260px)_1fr]">
               <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[200px]">
@@ -160,23 +160,23 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
                   />
                 ) : (
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-stone-300 to-stone-500"
+                    className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-rose-950/90 via-[#1a1412] to-stone-950"
                     aria-hidden
                   >
-                    <span className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.35em] text-stone-100">
+                    <span className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.35em] text-[#c9c6c0]">
                       Lab
                     </span>
                   </div>
                 )}
               </div>
               <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
-                <span className="font-mono-ui w-fit rounded-full border border-stone-500/25 bg-stone-100/80 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-stone-700">
+                <span className="font-mono-ui w-fit rounded-full border border-[#e8e6e1]/20 bg-[#e8e6e1]/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#e8e6e1]">
                   {FEATURED_INSIGHT.category}
                 </span>
-                <h3 className="text-balance text-xl font-semibold leading-snug tracking-tight text-stone-900 sm:text-2xl">
+                <h3 className="text-balance text-xl font-semibold leading-snug tracking-tight text-[#f5f3ef] sm:text-2xl">
                   {FEATURED_INSIGHT.title}
                 </h3>
-                <p className="max-w-xl text-pretty text-sm leading-relaxed text-stone-600 sm:text-[0.9375rem]">
+                <p className="max-w-xl text-pretty text-sm leading-relaxed text-stone-400 sm:text-[0.9375rem]">
                   {FEATURED_INSIGHT.description}
                 </p>
                 <div>
@@ -189,7 +189,7 @@ export default function HomePage({ navigate }: { navigate: NavigateFn }) {
                       authorizeAnkleInsightRead()
                       navigate(FEATURED_INSIGHT.viewerPath)
                     }}
-                    className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-stone-900 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#f5f3ef] shadow-[0_12px_36px_-12px_rgba(0,0,0,0.35)] transition-all duration-500 hover:bg-stone-800 ${easeFluid}`}
+                    className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-[#e8e6e1] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-stone-900 shadow-[0_12px_36px_-12px_rgba(0,0,0,0.45)] transition-all duration-500 hover:bg-[#f5f3ef] hover:shadow-[0_16px_40px_-12px_rgba(0,0,0,0.35)] ${easeFluid}`}
                   >
                     Read Now
                   </a>
