@@ -1,0 +1,8 @@
+{
+  "name": "female-athlete-lab",
+  "private": true,
+  "description": "Root package so Vercel can build when Project Root Directory is the repo root (not site/).",
+  "scripts": {
+    "build": "npm ci --prefix site && npm run build --prefix site"
+  }
+}
