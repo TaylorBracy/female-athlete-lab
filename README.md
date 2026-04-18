@@ -26,12 +26,13 @@ The site is a static Vite build. Vercel’s **Hobby** tier is free for personal 
 
    Commit any local edits first (`git add` / `git commit`). If `origin` already exists, use `git remote set-url origin …` instead of `add`.
 
-2. **Import on Vercel**: [vercel.com/new](https://vercel.com/new) → sign in with GitHub → **Import** your repository. Leave **Root Directory** blank (the repo includes `vercel.json` at the top level so builds run inside `site/` automatically).
+2. **Import on Vercel**: [vercel.com/new](https://vercel.com/new) → sign in with GitHub → **Import** your repository.
 
-3. **Deploy**: Vercel runs `npm install` and `npm run build` under `site/`, publishes `site/dist`, and gives you a `*.vercel.app` URL. Later pushes to `main` redeploy automatically.
+3. **Set the app folder**: Before you deploy, open **Configure Project** and set **Root Directory** to **`site`** (the folder that contains `package.json`). Vercel will auto-detect **Vite** and build `dist/`. If you already created the project, go to **Settings → General → Root Directory** → **`site`** → save, then **Deployments → Redeploy**.
+
+4. **Deploy** and open the **`*.vercel.app`** URL. Later pushes to `main` redeploy automatically.
 
 ### Content
 
 - Article titles and metadata live in **`site/src/App.tsx`** (`INITIAL_ARTICLES` and related UI). Adjust there and rebuild for production.
 - **Pillars** in the sidebar are a multi-select filter for **Latest articles**: any selected pillar matches an article if that article is tagged with **any** of them (OR). Use **Clear pillar filters** to show everything again.
-# female-athlete-lab
