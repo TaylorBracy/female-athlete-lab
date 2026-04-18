@@ -1,16 +1,21 @@
 import { useState } from 'react'
 
+import { FEATURED_INSIGHT } from './featuredInsight'
 import { type Pillar } from './articlesData'
 
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
+
+/** One published PDF insight in the archive. */
+const PUBLISHED_INSIGHT_COUNT = 1
 
 export default function HomePage() {
   const [selectedFilterPillars, setSelectedFilterPillars] = useState<Set<Pillar>>(
     () => new Set(),
   )
+  const [thumbFailed, setThumbFailed] = useState(false)
 
-  const articleCount = 0
-  const barPercent = 0
+  const articleCount = PUBLISHED_INSIGHT_COUNT
+  const barPercent = Math.min(100, (articleCount / 20) * 100)
 
   function toggleFilterPillar(pillar: Pillar) {
     setSelectedFilterPillars((prev) => {
@@ -128,16 +133,70 @@ export default function HomePage() {
           aria-hidden
         />
 
-        <section className={`mx-auto max-w-2xl py-10 ${easeFluid}`}>
+        {/* Insights — preview only; full PDF loads only on /insights/... */}
+        <section className="py-8 lg:py-10" aria-labelledby="insights-heading">
+          <h2
+            id="insights-heading"
+            className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-pink-400/90"
+          >
+            Insights
+          </h2>
+          <div
+            className={`mt-4 overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/[0.06] shadow-[0_24px_64px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl ${easeFluid}`}
+          >
+            <div className="grid gap-0 md:grid-cols-[minmax(0,220px)_1fr] lg:grid-cols-[minmax(0,260px)_1fr]">
+              <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[200px]">
+                {!thumbFailed ? (
+                  <img
+                    src={FEATURED_INSIGHT.thumbnailUrl}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    onError={() => setThumbFailed(true)}
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-rose-950/90 via-[#1a1412] to-stone-950"
+                    aria-hidden
+                  >
+                    <span className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.35em] text-pink-300/50">
+                      Lab
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
+                <span className="font-mono-ui w-fit rounded-full border border-pink-400/25 bg-pink-500/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-pink-200/90">
+                  {FEATURED_INSIGHT.category}
+                </span>
+                <h3 className="text-balance text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
+                  {FEATURED_INSIGHT.title}
+                </h3>
+                <p className="max-w-xl text-pretty text-sm leading-relaxed text-stone-400 sm:text-[0.9375rem]">
+                  {FEATURED_INSIGHT.description}
+                </p>
+                <div>
+                  <a
+                    href={FEATURED_INSIGHT.viewerPath}
+                    className={`font-mono-ui inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 via-pink-500 to-fuchsia-600 px-6 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_12px_36px_-8px_rgba(219,39,119,0.45)] transition-all duration-500 hover:shadow-[0_16px_44px_-6px_rgba(192,38,211,0.35)] ${easeFluid}`}
+                  >
+                    Read Now
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={`mx-auto max-w-xl pb-16 ${easeFluid}`}>
           <aside className={`flex flex-col gap-7 ${easeFluid}`}>
             <div className="rounded-[2rem] border border-white/65 bg-white/[0.96] p-7 shadow-[0_28px_70px_-28px_rgba(217,70,239,0.22)] backdrop-blur-2xl transition-all duration-700 hover:border-white/85 hover:shadow-[0_36px_80px_-24px_rgba(217,70,239,0.28)]">
               <h3 className="font-mono-ui text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-900">
                 Pillars
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-stone-600">
-                Select one or more pillars. When articles are published, they will appear if they match{' '}
-                <strong>any</strong> selected pillar. Tap again to deselect. When none are selected, the full
-                archive will show.
+                Select one or more pillars. When more pieces ship, they will filter by{' '}
+                <strong>any</strong> match. Tap again to deselect.
               </p>
               <div className="mt-6 flex flex-wrap gap-2.5">
                 <Pill pillar="Performance" tone="pink" />
@@ -176,10 +235,6 @@ export default function HomePage() {
               </p>
             </div>
           </aside>
-
-          <p className="mt-8 text-center text-sm leading-relaxed text-stone-500">
-            No long-form articles are published here yet.
-          </p>
         </section>
       </div>
     </div>
