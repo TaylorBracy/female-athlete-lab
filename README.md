@@ -12,9 +12,27 @@ npm run dev -- --host 127.0.0.1
 
 Production build: `cd site && npm run build` (output in `site/dist`).
 
-### Adding articles (private)
+### Deploy for free (GitHub + Vercel)
 
-- While **`npm run dev`** is running, a **Draft workspace** panel appears in the sidebar: title, one or more **pillars** (Performance / Rehab / Data / Women’s Sports—toggle as many as apply; at least one stays on), optional **Google Doc** URL. Dragging cards onto the **Articles** counter is only enabled in that mode.
-- **Pillars** in the white card are a multi-select filter for **Latest articles**: any selected pillar matches an article if that article is tagged with **any** of them (OR). Use **Clear pillar filters** to show everything again.
-- **`npm run build`** / the public site **does not** show the draft UI unless you set the env flag below.
-- Optional: **`site/.env.local`** with `VITE_ENABLE_LOCAL_ARTICLE_EDITOR=true` — see **`site/.env.example`**.
+The site is a static Vite build. Vercel’s **Hobby** tier is free for personal projects and works well with this repo.
+
+1. **Push to GitHub** (one-time; use a new empty repo name, e.g. `female-athlete-lab`):
+
+   ```bash
+   cd /Users/taylorbracy/female-athlete-lab
+   git add -A && git status
+   git commit -m "Prepare Vercel deploy"
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git push -u origin main
+   ```
+
+   If `origin` already exists, use `git remote set-url origin …` instead of `add`.
+
+2. **Import on Vercel**: [vercel.com/new](https://vercel.com/new) → sign in with GitHub → **Import** your repository. Leave **Root Directory** blank (the repo includes `vercel.json` at the top level so builds run inside `site/` automatically).
+
+3. **Deploy**: Vercel runs `npm install` and `npm run build` under `site/`, publishes `site/dist`, and gives you a `*.vercel.app` URL. Later pushes to `main` redeploy automatically.
+
+### Content
+
+- Article titles and metadata live in **`site/src/App.tsx`** (`INITIAL_ARTICLES` and related UI). Adjust there and rebuild for production.
+- **Pillars** in the sidebar are a multi-select filter for **Latest articles**: any selected pillar matches an article if that article is tagged with **any** of them (OR). Use **Clear pillar filters** to show everything again.
