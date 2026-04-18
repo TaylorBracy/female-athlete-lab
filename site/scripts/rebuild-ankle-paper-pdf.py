@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-One-off generator: editorial PDF for the ankle sprains paper.
+Editorial PDF for the ankle sprains paper — single scroll page, brand typography.
+Assets: site/scripts/paper_assets/fig01.jpeg, fig02.png (from original Google Doc export).
 Run: python3 site/scripts/rebuild-ankle-paper-pdf.py
 """
 from pathlib import Path
 
+from PIL import Image as PILImage
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 from reportlab.lib.pagesizes import LETTER
@@ -13,32 +15,58 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import (
     HRFlowable,
+    Image,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
+    Table,
+    TableStyle,
 )
 
-# Female Athlete Lab — restrained palette (not flashy)
+# Female Athlete Lab — restrained palette
 STONE_700 = colors.HexColor("#44403c")
 STONE_500 = colors.HexColor("#78716c")
 PINK_900 = colors.HexColor("#831843")
 RULE = colors.HexColor("#fbcfe8")
 
+# One continuous page: height must exceed all content (points).
+PAGE_WIDTH = LETTER[0]
+PAGE_HEIGHT = 12000
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+ASSETS = SCRIPT_DIR / "paper_assets"
+CONTENT_WIDTH = PAGE_WIDTH - 2 * 0.92 * inch
+
 
 def _p(text: str) -> str:
-    return (
-        text.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _scaled_image(path: Path, max_width_pt: float) -> Table:
+    im = PILImage.open(path)
+    iw, ih = im.size
+    w = max_width_pt
+    h = ih * (w / iw)
+    img = Image(str(path), width=w, height=h)
+    tbl = Table([[img]], colWidths=[CONTENT_WIDTH], hAlign="CENTER")
+    tbl.setStyle(
+        TableStyle(
+            [
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+            ]
+        )
     )
+    return tbl
 
 
 def footer(canvas: canvas.Canvas, doc) -> None:
     canvas.saveState()
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(STONE_500)
-    n = canvas.getPageNumber()
-    canvas.drawCentredString(LETTER[0] / 2, 0.55 * inch, str(n))
+    canvas.drawCentredString(PAGE_WIDTH / 2, 0.55 * inch, "1")
     canvas.restoreState()
 
 
@@ -102,8 +130,7 @@ def build_flowables():
         spaceBefore=6,
         spaceAfter=14,
     )
-
-    story = []
+    story: list = []
 
     story.append(Paragraph(_p("Ankle Sprains in Female Athletes: Soccer vs. Basketball"), title))
     story.append(Paragraph(_p("Taylor Bracy, DPT"), subtitle))
@@ -133,6 +160,12 @@ def build_flowables():
         )
     )
 
+    # Figure 1 — original export: right column on page 1 alongside early sections.
+    fig1 = ASSETS / "fig01.jpeg"
+    if fig1.exists():
+        story.append(Spacer(1, 8))
+        story.append(_scaled_image(fig1, 5.75 * inch))
+
     story.append(Paragraph(_p("What the epidemiology suggests"), h2))
     story.append(
         Paragraph(
@@ -147,6 +180,12 @@ def build_flowables():
             body,
         )
     )
+
+    # Figure 2 — original export: after the movement / load discussion on page 2, before sport comparison.
+    fig2 = ASSETS / "fig02.png"
+    if fig2.exists():
+        story.append(Spacer(1, 8))
+        story.append(_scaled_image(fig2, 6.25 * inch))
 
     story.append(Paragraph(_p("Basketball and soccer: different stress profiles"), h2))
     story.append(
@@ -236,7 +275,7 @@ def main() -> None:
 
     doc = SimpleDocTemplate(
         str(out),
-        pagesize=LETTER,
+        pagesize=(PAGE_WIDTH, PAGE_HEIGHT),
         leftMargin=0.92 * inch,
         rightMargin=0.92 * inch,
         topMargin=0.85 * inch,
