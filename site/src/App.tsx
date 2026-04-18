@@ -18,6 +18,12 @@ type Article = {
 
 const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
   {
+    title: 'Ankle Sprains in Female Athletes: Soccer vs. Basketball',
+    category: 'Injury · Return to play',
+    pillars: ['Rehab', "Women's Sports", 'Performance'],
+    pdfUrl: '/papers/ankle-sprains-female-athletes-soccer-vs-basketball.pdf',
+  },
+  {
     title: 'What Female Athletes Actually Need Physically',
     category: 'Training load',
     pillars: ['Performance'],
@@ -59,11 +65,11 @@ export default function FemaleAthleteLabWebsite() {
   )
 
   const featuredPost = {
-    title: "What Actually Matters Most in Women's Field Sport Performance",
-    category: "Women's Sports",
+    title: 'Ankle Sprains in Female Athletes: Soccer vs. Basketball',
+    category: "Rehab · Women's Sports",
     date: 'April 2026',
     excerpt:
-      'A clear breakdown of what truly drives performance, resilience, and return to sport in female athletes.',
+      'How lateral ankle sprains differ across two of the highest-demand court and field sports for women—cutting volume, shoe–surface interaction, and what that means for rehab priorities and return to play.',
   }
 
   const articleCount = articles.length
