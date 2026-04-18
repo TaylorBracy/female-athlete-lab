@@ -12,6 +12,8 @@ type Article = {
   category: string
   /** One or more pillars; filter matches if any overlap. */
   pillars: Pillar[]
+  /** Short teaser; shown on cards when set. */
+  excerpt?: string
   pdfUrl?: string
   googleDocUrl?: string
 }
@@ -21,6 +23,8 @@ const INITIAL_ARTICLES: Omit<Article, 'id'>[] = [
     title: 'Ankle Sprains in Female Athletes: Soccer vs. Basketball',
     category: 'Injury · Return to play',
     pillars: ['Rehab', "Women's Sports", 'Performance'],
+    excerpt:
+      'Soccer versus basketball: how lateral ankle sprains differ in load, surface, and footwear—and what that means for rehab.',
     pdfUrl: '/papers/ankle-sprains-female-athletes-soccer-vs-basketball.pdf',
   },
   {
@@ -57,6 +61,10 @@ function seedArticles(): Article[] {
   }))
 }
 
+/** Long-form dek for the lead story hero (first item in `INITIAL_ARTICLES`). */
+const FEATURED_DEK =
+  "Lateral ankle sprains are among the most common injuries in women's court and field sports. This note compares how they show up in soccer versus basketball—loading patterns, surfaces, and footwear—and what that implies for assessment, rehab sequencing, and return to play."
+
 export default function FemaleAthleteLabWebsite() {
   const [articles] = useState<Article[]>(seedArticles)
   /** Empty = show all. Otherwise show articles whose pillars intersect this set (OR). */
@@ -64,13 +72,8 @@ export default function FemaleAthleteLabWebsite() {
     () => new Set(),
   )
 
-  const featuredPost = {
-    title: 'Ankle Sprains in Female Athletes: Soccer vs. Basketball',
-    category: "Rehab · Women's Sports",
-    date: 'April 2026',
-    excerpt:
-      'How lateral ankle sprains differ across two of the highest-demand court and field sports for women—cutting volume, shoe–surface interaction, and what that means for rehab priorities and return to play.',
-  }
+  /** Editorial lead: always mirrors the first entry in the archive so copy stays in sync. */
+  const leadArticle = articles[0]
 
   const articleCount = articles.length
   const barPercent = Math.min(100, (articleCount / 20) * 100)
@@ -214,28 +217,53 @@ export default function FemaleAthleteLabWebsite() {
               aria-hidden
             />
             <div className="relative">
-              <span className="font-mono-ui inline-flex items-center gap-2 rounded-full border border-fuchsia-200/90 bg-gradient-to-r from-fuchsia-50 to-pink-50 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-fuchsia-900 transition-transform duration-500 group-hover:scale-[1.02]">
+              <p className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-pink-600">
+                From the Lab
+              </p>
+              <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-fuchsia-200/90 bg-gradient-to-r from-fuchsia-50 to-pink-50 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-fuchsia-900 transition-transform duration-500 group-hover:scale-[1.01]">
                 <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-500 shadow-[0_0_8px_#d946ef]" />
-                {featuredPost.category}
+                {leadArticle.category}
               </span>
 
-              <h2 className="mt-6 text-3xl font-bold leading-[1.18] tracking-tight text-stone-900 sm:text-4xl lg:text-[2.35rem]">
-                {featuredPost.title}
+              <h2 className="mt-5 max-w-[22ch] text-balance text-3xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-4xl lg:text-[2.35rem]">
+                {leadArticle.title}
               </h2>
 
-              <p className="font-mono-ui mt-4 text-xs text-pink-700/85">{featuredPost.date}</p>
-
-              <p className="mt-5 max-w-2xl text-base leading-[1.7] text-stone-600 sm:text-lg">
-                {featuredPost.excerpt}
+              <p className="font-mono-ui mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-stone-500">
+                <time dateTime="2026-04">April 2026</time>
+                <span className="text-stone-300" aria-hidden>
+                  ·
+                </span>
+                <span className="text-pink-700/90">Full paper</span>
               </p>
 
-              <div className="mt-9 flex flex-wrap gap-3">
-                <span className="font-mono-ui rounded-full border border-stone-200/90 bg-stone-50/90 px-3 py-1.5 text-[10px] uppercase tracking-widest text-stone-600 transition-colors duration-500 hover:border-pink-200 hover:bg-pink-50/50">
-                  Neural-indexed
-                </span>
-                <span className="font-mono-ui rounded-full border border-stone-200/90 bg-stone-50/90 px-3 py-1.5 text-[10px] uppercase tracking-widest text-stone-600 transition-colors duration-500 hover:border-pink-200 hover:bg-pink-50/50">
-                  Field validated
-                </span>
+              <p className="mt-6 max-w-2xl text-pretty text-base leading-[1.75] text-stone-700 sm:text-[1.0625rem]">
+                {FEATURED_DEK}
+              </p>
+
+              {leadArticle.pdfUrl ? (
+                <a
+                  href={leadArticle.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`font-mono-ui mt-8 inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-600 via-pink-500 to-fuchsia-600 px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_12px_40px_-8px_rgba(219,39,119,0.45)] transition-all duration-500 hover:shadow-[0_16px_48px_-6px_rgba(192,38,211,0.4)] sm:w-auto ${easeFluid}`}
+                >
+                  Read the full paper
+                  <span aria-hidden className="text-sm font-normal opacity-90">
+                    →
+                  </span>
+                </a>
+              ) : null}
+
+              <div className="mt-8 flex flex-wrap gap-2 border-t border-stone-200/80 pt-8">
+                {leadArticle.pillars.map((p) => (
+                  <span
+                    key={p}
+                    className="font-mono-ui rounded-full border border-pink-200/90 bg-gradient-to-b from-white to-pink-50/80 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-pink-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+                  >
+                    {p}
+                  </span>
+                ))}
               </div>
             </div>
           </article>
@@ -293,16 +321,20 @@ export default function FemaleAthleteLabWebsite() {
           <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-white">
-                Latest articles
+                Journal
               </h3>
-              <p className="mt-1 font-mono-ui text-[10px] uppercase tracking-[0.2em] text-stone-500">
+              <p className="mt-1 max-w-md text-sm leading-relaxed text-stone-400">
+                Papers and short notes—evidence-forward, built for coaches, clinicians, and athletes in
+                women&apos;s sport.
+              </p>
+              <p className="mt-2 font-mono-ui text-[10px] uppercase tracking-[0.2em] text-stone-500">
                 {selectedFilterPillars.size > 0
                   ? `Showing ${visibleArticles.length} match · ${[...selectedFilterPillars].join(' · ')}`
-                  : 'All pillars'}
+                  : 'Filter by pillar above · or browse the full list'}
               </p>
             </div>
             <p className="font-mono-ui text-[10px] uppercase tracking-[0.25em] text-stone-500 sm:pt-8">
-              Archive /2026
+              Vol. 2026
             </p>
           </div>
 
@@ -312,59 +344,82 @@ export default function FemaleAthleteLabWebsite() {
             </p>
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {visibleArticles.map((post, index) => (
-                <article
-                  key={post.id}
-                  className={`group relative overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/[0.96] p-6 shadow-[0_16px_48px_-16px_rgba(244,114,182,0.18)] backdrop-blur-xl transition-all duration-700 hover:-translate-y-1.5 hover:border-pink-200/90 hover:shadow-[0_28px_64px_-18px_rgba(244,114,182,0.32)] ${easeFluid}`}
-                >
-                  <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-pink-300/40 to-fuchsia-400/25 blur-3xl transition-all duration-700 group-hover:scale-110 group-hover:opacity-100 sm:opacity-70" />
-                  <div className="relative flex items-start justify-between gap-3">
-                    <span className="font-mono-ui text-[10px] font-medium tabular-nums text-pink-700">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <div className="flex max-w-[65%] flex-col items-end gap-1 text-right">
-                      <div className="flex flex-wrap justify-end gap-1">
-                        {post.pillars.map((p) => (
-                          <span
-                            key={p}
-                            className="font-mono-ui rounded-full border border-pink-200 bg-pink-50/90 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-pink-900"
-                          >
-                            {p}
+              {visibleArticles.map((post, index) => {
+                const isPaper = Boolean(post.pdfUrl)
+                return (
+                  <article
+                    key={post.id}
+                    className={`group relative overflow-hidden rounded-[1.75rem] border bg-white/[0.96] p-6 shadow-[0_16px_48px_-16px_rgba(244,114,182,0.18)] backdrop-blur-xl transition-all duration-700 hover:-translate-y-1.5 hover:shadow-[0_28px_64px_-18px_rgba(244,114,182,0.32)] ${easeFluid} ${
+                      isPaper
+                        ? 'border-pink-200/90 border-l-[3px] border-l-pink-500 hover:border-pink-300/90'
+                        : 'border-white/80 hover:border-pink-200/90'
+                    }`}
+                  >
+                    <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-pink-300/40 to-fuchsia-400/25 blur-3xl transition-all duration-700 group-hover:scale-110 group-hover:opacity-100 sm:opacity-70" />
+                    <div className="relative flex items-start justify-between gap-3">
+                      <div className="flex flex-col gap-2">
+                        <span className="font-mono-ui text-[10px] font-medium tabular-nums text-pink-700">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        {isPaper ? (
+                          <span className="font-mono-ui w-fit rounded-md border border-pink-300/70 bg-pink-50 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-pink-900">
+                            Paper
                           </span>
-                        ))}
+                        ) : (
+                          <span className="font-mono-ui w-fit rounded-md border border-stone-200 bg-stone-50 px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-stone-600">
+                            Note
+                          </span>
+                        )}
                       </div>
-                      <span className="font-mono-ui text-[9px] uppercase tracking-[0.14em] text-fuchsia-800/75">
-                        {post.category}
-                      </span>
+                      <div className="flex max-w-[58%] flex-col items-end gap-1 text-right">
+                        <div className="flex flex-wrap justify-end gap-1">
+                          {post.pillars.map((p) => (
+                            <span
+                              key={p}
+                              className="font-mono-ui rounded-full border border-pink-200 bg-pink-50/90 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wider text-pink-900"
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                        <span className="font-mono-ui text-[9px] uppercase tracking-[0.14em] text-fuchsia-800/75">
+                          {post.category}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <h4 className="relative mt-4 text-lg font-semibold leading-snug text-stone-900 transition-colors duration-500 group-hover:text-pink-950">
-                    {post.title}
-                  </h4>
-                  <div className="relative mt-3 flex flex-wrap gap-3">
-                    {post.pdfUrl ? (
-                      <a
-                        href={post.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono-ui text-[10px] font-semibold uppercase tracking-wider text-pink-700 underline decoration-pink-300/60 underline-offset-2 hover:text-pink-900"
-                      >
-                        Open PDF
-                      </a>
+                    <h4 className="relative mt-4 text-balance text-lg font-semibold leading-snug tracking-tight text-stone-900 transition-colors duration-500 group-hover:text-pink-950">
+                      {post.title}
+                    </h4>
+                    {post.excerpt ? (
+                      <p className="relative mt-3 line-clamp-3 text-sm leading-relaxed text-stone-600">
+                        {post.excerpt}
+                      </p>
                     ) : null}
-                    {post.googleDocUrl ? (
-                      <a
-                        href={post.googleDocUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono-ui text-[10px] font-semibold uppercase tracking-wider text-fuchsia-800 underline decoration-fuchsia-300/50 underline-offset-2 hover:text-fuchsia-950"
-                      >
-                        Open Google Doc
-                      </a>
-                    ) : null}
-                  </div>
-                </article>
-              ))}
+                    <div className="relative mt-5 flex flex-col gap-2">
+                      {post.pdfUrl ? (
+                        <a
+                          href={post.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`font-mono-ui inline-flex w-full items-center justify-center rounded-xl border border-pink-200/90 bg-gradient-to-b from-white to-pink-50/90 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-pink-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] transition-all duration-500 hover:border-pink-300 hover:shadow-[0_8px_24px_-6px_rgba(244,114,182,0.35)] ${easeFluid}`}
+                        >
+                          Open PDF
+                        </a>
+                      ) : null}
+                      {post.googleDocUrl ? (
+                        <a
+                          href={post.googleDocUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono-ui text-center text-[10px] font-semibold uppercase tracking-wider text-fuchsia-800 underline decoration-fuchsia-300/50 underline-offset-2 hover:text-fuchsia-950"
+                        >
+                          Google Doc
+                        </a>
+                      ) : null}
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           )}
         </main>
