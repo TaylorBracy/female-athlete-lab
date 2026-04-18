@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import AnkleSprainsBlogPost from './AnkleSprainsBlogPost'
+
 const easeFluid = '[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]'
 
 const PILLARS = ['Performance', 'Rehab', 'Data', "Women's Sports"] as const
@@ -61,19 +63,12 @@ function seedArticles(): Article[] {
   }))
 }
 
-/** Long-form dek for the lead story hero (first item in `INITIAL_ARTICLES`). */
-const FEATURED_DEK =
-  "Lateral ankle sprains are among the most common injuries in women's court and field sports. This note compares how they show up in soccer versus basketball—loading patterns, surfaces, and footwear—and what that implies for assessment, rehab sequencing, and return to play."
-
 export default function FemaleAthleteLabWebsite() {
   const [articles] = useState<Article[]>(seedArticles)
   /** Empty = show all. Otherwise show articles whose pillars intersect this set (OR). */
   const [selectedFilterPillars, setSelectedFilterPillars] = useState<Set<Pillar>>(
     () => new Set(),
   )
-
-  /** Editorial lead: always mirrors the first entry in the archive so copy stays in sync. */
-  const leadArticle = articles[0]
 
   const articleCount = articles.length
   const barPercent = Math.min(100, (articleCount / 20) * 100)
@@ -200,74 +195,10 @@ export default function FemaleAthleteLabWebsite() {
           aria-hidden
         />
 
-        <section className="grid gap-7 py-10 lg:grid-cols-[1.65fr_1fr] lg:gap-10">
-          <article
-            className={`group relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/[0.97] p-8 shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_32px_80px_-24px_rgba(244,114,182,0.28)] backdrop-blur-2xl transition-all duration-700 hover:border-white/90 hover:shadow-[0_40px_90px_-28px_rgba(244,114,182,0.35)] sm:p-10 ${easeFluid} hover:-translate-y-1`}
-          >
-            <div
-              className="animate-border-glow pointer-events-none absolute inset-0 rounded-[2rem] opacity-40"
-              style={{
-                background:
-                  'linear-gradient(125deg, transparent 20%, rgba(251,207,232,0.55) 45%, rgba(245,208,254,0.35) 55%, transparent 80%)',
-              }}
-              aria-hidden
-            />
-            <div
-              className="animate-sheen pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-r from-transparent via-white/25 to-transparent"
-              aria-hidden
-            />
-            <div className="relative">
-              <p className="font-mono-ui text-[10px] font-semibold uppercase tracking-[0.28em] text-pink-600">
-                From the Lab
-              </p>
-              <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-fuchsia-200/90 bg-gradient-to-r from-fuchsia-50 to-pink-50 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-fuchsia-900 transition-transform duration-500 group-hover:scale-[1.01]">
-                <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-500 shadow-[0_0_8px_#d946ef]" />
-                {leadArticle.category}
-              </span>
+        <AnkleSprainsBlogPost />
 
-              <h2 className="mt-5 max-w-[22ch] text-balance text-3xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-4xl lg:text-[2.35rem]">
-                {leadArticle.title}
-              </h2>
-
-              <p className="font-mono-ui mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-stone-500">
-                <time dateTime="2026-04">April 2026</time>
-                <span className="text-stone-300" aria-hidden>
-                  ·
-                </span>
-                <span className="text-pink-700/90">Full paper</span>
-              </p>
-
-              <p className="mt-6 max-w-2xl text-pretty text-base leading-[1.75] text-stone-700 sm:text-[1.0625rem]">
-                {FEATURED_DEK}
-              </p>
-
-              {leadArticle.pdfUrl ? (
-                <a
-                  href={leadArticle.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`font-mono-ui mt-8 inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-600 via-pink-500 to-fuchsia-600 px-6 py-3.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_12px_40px_-8px_rgba(219,39,119,0.45)] transition-all duration-500 hover:shadow-[0_16px_48px_-6px_rgba(192,38,211,0.4)] sm:w-auto ${easeFluid}`}
-                >
-                  Read the full paper
-                  <span aria-hidden className="text-sm font-normal opacity-90">
-                    →
-                  </span>
-                </a>
-              ) : null}
-
-              <div className="mt-8 flex flex-wrap gap-2 border-t border-stone-200/80 pt-8">
-                {leadArticle.pillars.map((p) => (
-                  <span
-                    key={p}
-                    className="font-mono-ui rounded-full border border-pink-200/90 bg-gradient-to-b from-white to-pink-50/80 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-pink-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </article>
-
+        <section className="mx-auto max-w-7xl px-5 pb-6 pt-14 sm:px-6">
+          <div className={`grid gap-7 sm:grid-cols-2 ${easeFluid}`}>
           <aside className={`flex flex-col gap-7 ${easeFluid}`}>
             <div className="rounded-[2rem] border border-white/65 bg-white/[0.96] p-7 shadow-[0_28px_70px_-28px_rgba(217,70,239,0.22)] backdrop-blur-2xl transition-all duration-700 hover:border-white/85 hover:shadow-[0_36px_80px_-24px_rgba(217,70,239,0.28)]">
               <h3 className="font-mono-ui text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-900">
@@ -315,9 +246,10 @@ export default function FemaleAthleteLabWebsite() {
               </p>
             </div>
           </aside>
+          </div>
         </section>
 
-        <main className="pb-20">
+        <main className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
           <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-white">
