@@ -16,17 +16,15 @@ Production build: `cd site && npm run build` (output in `site/dist`).
 
 The site is a static Vite build. Vercel’s **Hobby** tier is free for personal projects and works well with this repo.
 
-1. **Push to GitHub** (one-time; use a new empty repo name, e.g. `female-athlete-lab`):
+1. **Create a GitHub repository** in the browser (empty repo, no template README if you already have one locally). Then connect and push:
 
    ```bash
    cd /Users/taylorbracy/female-athlete-lab
-   git add -A && git status
-   git commit -m "Prepare Vercel deploy"
    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
    git push -u origin main
    ```
 
-   If `origin` already exists, use `git remote set-url origin …` instead of `add`.
+   Commit any local edits first (`git add` / `git commit`). If `origin` already exists, use `git remote set-url origin …` instead of `add`.
 
 2. **Import on Vercel**: [vercel.com/new](https://vercel.com/new) → sign in with GitHub → **Import** your repository. Leave **Root Directory** blank (the repo includes `vercel.json` at the top level so builds run inside `site/` automatically).
 
