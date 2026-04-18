@@ -83,10 +83,10 @@ export default function AnkleSprainsBlogPost() {
 
       <div className="relative mx-auto max-w-3xl px-5 py-12 sm:px-8 lg:max-w-4xl lg:py-16">
         {/* Title strip — editorial sport layout; wording unchanged */}
-        <header className="relative -mx-5 mb-10 overflow-hidden sm:-mx-8">
-          <div className="bg-gradient-to-br from-rose-700 via-rose-800 to-rose-950 px-5 py-8 text-[#f4f1ea] shadow-[0_24px_60px_-20px_rgba(190,24,93,0.45)] sm:px-8 sm:py-10">
-            <div className="flex flex-row items-start justify-between gap-4 sm:gap-8">
-              <div className="min-w-0 flex-1">
+        <header className="relative -mx-5 mb-16 overflow-visible sm:-mx-8 sm:mb-20">
+          <div className="relative overflow-visible rounded-sm bg-gradient-to-br from-rose-700 via-rose-800 to-rose-950 px-5 py-8 text-[#f4f1ea] shadow-[0_24px_60px_-20px_rgba(190,24,93,0.45)] sm:px-8 sm:py-10">
+            <div className="flex flex-row items-start justify-between gap-3 sm:gap-6">
+              <div className="min-w-0 flex-1 pr-1">
                 <p
                   className="font-[family-name:var(--font-bebas)] text-[clamp(1.85rem,6.5vw,3.5rem)] font-normal uppercase leading-[0.92] tracking-wide"
                   style={{ fontFamily: '"Bebas Neue", Impact, sans-serif' }}
@@ -104,11 +104,12 @@ export default function AnkleSprainsBlogPost() {
                   Taylor Bracy, DPT
                 </p>
               </div>
-              <div className="shrink-0 pt-1">
+              {/* Larger photo; breaks past the red panel (overflow visible on ancestors) */}
+              <div className="relative z-20 -mb-11 -mr-1 w-[9rem] shrink-0 sm:-mr-3 sm:w-[11rem] md:-mr-4 md:w-[12.5rem]">
                 <img
                   src="/blog/ankle-sprains/hero.png"
                   alt=""
-                  className="h-auto max-h-40 w-[5.25rem] rounded-md border border-white/25 object-cover object-[center_20%] shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] sm:max-h-48 sm:w-[6.75rem] md:w-[7.5rem]"
+                  className="h-auto w-full translate-x-2 translate-y-1 rounded-lg border-2 border-white/40 object-cover object-[center_22%] shadow-[0_22px_50px_-12px_rgba(0,0,0,0.55)] ring-1 ring-black/20 sm:translate-x-4 sm:translate-y-2 md:translate-x-6 md:translate-y-3"
                   loading="eager"
                 />
               </div>
@@ -117,7 +118,7 @@ export default function AnkleSprainsBlogPost() {
         </header>
 
         <div
-          className="space-y-5 font-[family-name:var(--font-dm)] text-[0.95rem] leading-relaxed text-neutral-900 sm:text-[1.05rem] sm:leading-[1.7]"
+          className="space-y-5 pt-8 font-[family-name:var(--font-dm)] text-[0.95rem] leading-relaxed text-neutral-900 sm:pt-10 sm:text-[1.05rem] sm:leading-[1.7]"
           style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}
         >
           <H2>Why This Matters</H2>
