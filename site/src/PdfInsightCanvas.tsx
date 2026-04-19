@@ -72,53 +72,58 @@ export default function PdfInsightCanvas({ pdfUrl }: Props) {
         pdfDoc = pdf
         if (cancelled) return
 
-        const page = await pdf.getPage(1)
-        if (cancelled) return
+        const numPages = pdf.numPages
+        let anyTileRendered = false
 
-        const baseVp = page.getViewport({ scale: 1 })
-        const cssW = hostWidth
-        const cssScale = cssW / baseVp.width
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.75)
-        const scale = cssScale * dpr
-        const viewport = page.getViewport({ scale })
-
-        const totalDeviceH = Math.ceil(viewport.height)
-        let offset = 0
-        let firstTile = true
-        while (offset < totalDeviceH) {
-          const deviceH = Math.min(TILE_DEVICE_PX, totalDeviceH - offset)
-          const canvas = document.createElement('canvas')
-          const ctx = canvas.getContext('2d', { alpha: false })
-          if (!ctx) throw new Error('Canvas 2D not available')
-
-          canvas.width = Math.floor(viewport.width)
-          canvas.height = deviceH
-          canvas.style.width = `${cssW}px`
-          canvas.style.height = `${deviceH / dpr}px`
-          canvas.style.display = 'block'
-          canvas.style.verticalAlign = 'top'
-
-          const rt = page.render({
-            canvasContext: ctx,
-            viewport,
-            transform: [1, 0, 0, 1, 0, -offset],
-            intent: 'display',
-            annotationMode: AnnotationMode.DISABLE,
-          })
-          renderTasks.push(rt)
-          await rt.promise
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum)
           if (cancelled) return
 
-          host.appendChild(canvas)
-          if (firstTile) {
-            firstTile = false
-            if (!cancelled) setPhase('ready')
+          const baseVp = page.getViewport({ scale: 1 })
+          const cssW = hostWidth
+          const cssScale = cssW / baseVp.width
+          const dpr = Math.min(window.devicePixelRatio || 1, 2.75)
+          const scale = cssScale * dpr
+          const viewport = page.getViewport({ scale })
+
+          const totalDeviceH = Math.ceil(viewport.height)
+          let offset = 0
+          while (offset < totalDeviceH) {
+            const deviceH = Math.min(TILE_DEVICE_PX, totalDeviceH - offset)
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d', { alpha: false })
+            if (!ctx) throw new Error('Canvas 2D not available')
+
+            canvas.width = Math.floor(viewport.width)
+            canvas.height = deviceH
+            canvas.style.width = `${cssW}px`
+            canvas.style.height = `${deviceH / dpr}px`
+            canvas.style.display = 'block'
+            canvas.style.verticalAlign = 'top'
+
+            const rt = page.render({
+              canvasContext: ctx,
+              viewport,
+              transform: [1, 0, 0, 1, 0, -offset],
+              intent: 'display',
+              annotationMode: AnnotationMode.DISABLE,
+            })
+            renderTasks.push(rt)
+            await rt.promise
+            if (cancelled) return
+
+            host.appendChild(canvas)
+            if (!anyTileRendered) {
+              anyTileRendered = true
+              if (!cancelled) setPhase('ready')
+            }
+            offset += deviceH
           }
-          offset += deviceH
+
+          page.cleanup()
         }
 
-        page.cleanup()
-        if (!cancelled && firstTile) setPhase('ready')
+        if (!cancelled && !anyTileRendered) setPhase('ready')
       } catch (e) {
         console.error(e)
         if (!cancelled) setPhase('error')

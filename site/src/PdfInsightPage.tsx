@@ -13,7 +13,9 @@ const readerBg = '#faf9f6'
 
 export default function PdfInsightPage({ navigate }: { navigate: NavigateFn }) {
   useLayoutEffect(() => {
-    if (import.meta.env.DEV) invalidateFeaturedInsightPdfCache()
+    // Drop any bytes from homepage prefetch so the reader always loads the current PDF
+    // (avoids stale in-memory or HTTP-cached content after a replacement).
+    invalidateFeaturedInsightPdfCache()
   }, [])
 
   useLayoutEffect(() => {

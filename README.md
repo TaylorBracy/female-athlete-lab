@@ -32,7 +32,33 @@ The site is a static Vite build. Vercel’s **Hobby** tier is free for personal 
 
 4. **Deploy** and open the **`*.vercel.app`** URL. Later pushes to `main` redeploy automatically.
 
-### Content
+### Publishing the featured insight (PDF article)
 
-- The live page is **`site/src/HomePage.tsx`**: header plus **Pillars** and an empty **Articles** counter. There is no article body, no journal grid, and no ankle-sprains route in the app.
-- After you change code, **commit and `git push`** so Vercel rebuilds. If production still looks old, open **Deployments → Redeploy** and hard-refresh the browser (**Cmd+Shift+R**).
+You do **not** need to edit TypeScript for a new PDF or card copy.
+
+1. Put your final **PDF** (and optional **thumbnail** image) somewhere on your machine.
+2. From **`site/`**:
+
+   ```bash
+   cd site
+   npm run publish-insight -- /path/to/your-article.pdf
+   ```
+
+   That copies the file into **`public/papers/`**, bumps the cache **revision** in **`src/content/featured-insight.json`**, and you’re done for a straight replacement (same URL and card text).
+
+   For a **new slug / URL** and updated homepage text:
+
+   ```bash
+   npm run publish-insight -- /path/to/article.pdf \
+     --slug my-topic \
+     --title "Your title" \
+     --description "Short blurb for the card." \
+     --category "Topic · Theme" \
+     --thumb /path/to/preview.jpg
+   ```
+
+   Run **`npm run publish-insight -- --help`** for options.
+
+3. **Commit and push** so Vercel rebuilds. Hard-refresh production (**Cmd+Shift+R**) if the old PDF still appears.
+
+The homepage layout lives in **`site/src/HomePage.tsx`**; the insight route reads **`src/content/featured-insight.json`** via **`src/featuredInsight.ts`**.
